@@ -63,10 +63,10 @@
     comic_list:
       - name: 紫罗兰永恒花园
         href: https://www.bilibili.com/bangumi/media/md8892/?spm_id_from=666.25.b_6d656469615f6d6f64756c65.1
-        cover: https://img02.anzhiy.cn/adminuploads/1/2022/12/13/639886315d658.webp
+        cover: https://tuchuang-1317757279.cos.ap-chengdu.myqcloud.com/%E7%B4%AB%E7%BD%97%E5%85%B0.jpg
       - name: 鬼灭之刃
         href: https://www.bilibili.com/bangumi/media/md22718131/?spm_id_from=666.25.b_6d656469615f6d6f64756c65.1
-        cover: https://img02.anzhiy.cn/adminuploads/1/2022/12/13/639886403d472.webp
+        cover: https://tuchuang-1317757279.cos.ap-chengdu.myqcloud.com/%E9%AC%BC%E7%81%AD.png
       - name: 间谍过家家
         href: https://www.bilibili.com/bangumi/play/ss41410
         cover: https://tuchuang-1317757279.cos.ap-chengdu.myqcloud.com/%E9%97%B4%E8%B0%8D%E8%BF%87%E5%AE%B6%E5%AE%B6.jpg  
@@ -75,7 +75,7 @@
         cover: https://tuchuang-1317757279.cos.ap-chengdu.myqcloud.com/%E8%BF%9B%E5%87%BB%E7%9A%84%E5%B7%A8%E4%BA%BA.webp
       - name: 东京食尸鬼
         href: https://www.yanaifei.net/vod/detail/100551.html
-        cover: https://tuchuang-1317757279.cos.ap-chengdu.myqcloud.com/%E5%96%B0%E7%A7%8D.jpg 
+        cover: https://tuchuang-1317757279.cos.ap-chengdu.myqcloud.com/%E5%96%B0%E7%A7%8D.jpg
   like:
     like_tips: 关注偏好
     like_title: openAI
