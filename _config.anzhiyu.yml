@@ -69,7 +69,7 @@ social:
    QQ: tencent://Message/?Uin=772307283&amp;websiteName=local.edu.com:8888=&amp;Menu=yes || anzhiyu-icon-qq
 
 author_status:
-  enable: false
+  enable: true
   status: ✍️
   alias: writing_hand
   fallback_src: https://github.githubassets.com/images/icons/emoji/unicode/270d.png
@@ -113,12 +113,12 @@ katex:
 # --------------------------------------
 
 # Favicon（网站图标）
-favicon: /img/favicon.png
+favicon: https://tuchuang-1317757279.cos.ap-chengdu.myqcloud.com/avatar2.jpg
 
 # Avatar (头像)
 avatar:
   img: https://tuchuang-1317757279.cos.ap-chengdu.myqcloud.com/avatar2.jpg
-  effect: false
+  effect: true
 
 # Disable all banner image
 disable_top_img: false
@@ -941,7 +941,7 @@ home_top:
   banner:
     tips: welcome
     title: 来到我的地球小窝
-    image: https://tuchuang-1317757279.cos.ap-chengdu.myqcloud.com/%E8%83%8C%E6%99%AF.png
+    image: https://tuchuang-1317757279.cos.ap-chengdu.myqcloud.com/syberpunk.png
     link: https://anzhiy.cn/posts/220c.html
 
 # 朋友圈配置
@@ -1012,7 +1012,7 @@ ptool:
 
 # 欢迎语配置
 greetingBox:
-  enable: false
+  enable: true
 
 # 文章顶部ai摘要
 post_head_ai_description:
