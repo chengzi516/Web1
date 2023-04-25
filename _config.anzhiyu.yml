@@ -5,7 +5,7 @@ menu:
      标签: /tags/ || anzhiyu-icon-tags
 
    友链:
-     友人帐: /link/ || anzhiyu-icon-link
+     #友人帐: /link/ || anzhiyu-icon-link
      好文推送: /fcircle/ || anzhiyu-icon-artstation
      #留言板: /comments/ || anzhiyu-icon-envelope
 
@@ -14,10 +14,10 @@ menu:
   #   追番页: /bangumis/ || anzhiyu-icon-bilibili
   #   相册集: /album/ || anzhiyu-icon-images
   #   小空调: /air-conditioner/ || anzhiyu-icon-fan
-   分站: 
-      站1: https://chengzi-516.netlify.app/   || fa fa-cloud 
-      站2: https://chengzi516.netlify.app/ || fa fa-cloud  
-      站3: https://taylor516.github.io/ || fa fa-cloud
+  #  分站: 
+  #     站1: https://chengzi-516.netlify.app/   || fa fa-cloud 
+  #     站2: https://chengzi516.netlify.app/ || fa fa-cloud  
+  #     站3: https://taylor516.github.io/ || fa fa-cloud
    关于:
      关于我: /about/ || anzhiyu-icon-paper-plane
      闲言碎语: /essay/ || anzhiyu-icon-lightbulb
@@ -31,9 +31,13 @@ nav:
   menu:
     - title: 网页
       item:
-        - name: 博客
-          link:  https://chengzi-516.netlify.app/
-          icon:  https://tuchuang-1317757279.cos.ap-chengdu.myqcloud.com/avatar2.jpg
+        - name:  分站1
+          link:  https://chengzi516.netlify.app/
+          icon:  https://tuchuang-1317757279.cos.ap-chengdu.myqcloud.com/%E5%B0%8F%E7%8B%BC1.jpeg
+        - name:  分站2
+          link:  https://taylor516.github.io/
+          icon:  https://tuchuang-1317757279.cos.ap-chengdu.myqcloud.com/%E5%B0%8F%E7%8B%BC2.jpeg
+
     - title: 项目
       item:
         - name: 暂无
