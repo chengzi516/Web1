@@ -25,20 +25,20 @@ menu:
 
 # nav相关配置
 nav:
-  enable: false
-  travelling: false
+  enable: true
+  travelling: true
   clock: true
   menu:
     - title: 网页
       item:
         - name: 博客
-          link: https://anzhiy.cn/
-          icon: /img/favicon.png
+          link:  https://chengzi-516.netlify.app/
+          icon:  https://tuchuang-1317757279.cos.ap-chengdu.myqcloud.com/avatar2.jpg
     - title: 项目
       item:
-        - name: 安知鱼图床
-          link: https://image.anzhiy.cn/
-          icon: https://image.anzhiy.cn/favicon.ico
+        - name: 暂无
+          link: 
+          icon: 
 
 # Code Blocks (代码相关)
 # --------------------------------------
