@@ -194,4 +194,202 @@ private:
 # ✡️拷贝构造函数
 
 
+拷贝构造适用于创建一个与`原对象一模一样`的新对象。
+且拷贝构造是一个构造函数的`重载`，且只有`单个形参`。
+形参必须为`类类型对象的引用`，如果使用的是传值，那么编译器会报错。
+
+```c++
+date(const date& d) {
+		_day = d._day;
+		_month = d._month;
+		_year = d._year;
+		stu = d.stu;
+	}
+```
+
+如果传递的是const date d，那么会引起`无限制的调用`。
+因为c\+\+规定，在函数里调用自定义类型，必须要调用其`拷贝构造`来完成。因为传值通常就意味着拷贝，这点还是很好去理解的。只不过相较于内置类型的直接拷贝，自定义类型的传值拷贝稍微要麻烦一点点。
+
+如果是传值，不就陷入了一个无穷的递归之中了吗？
+![](https://tuchuang-1317757279.cos.ap-chengdu.myqcloud.com/%E6%88%90%E5%91%98%E5%87%BD%E6%95%B05.png)
+
+
+当用户未在类中设置显式定义，编译器会生成默认的拷贝构造函数。此函数可以按照字节序进行拷贝（也被称为浅拷贝）。
+所以如果还是使用date或者student类，仍然没有必要去写一个拷贝构造函数。那换成上面的`stack`类呢？
+答案是`不行`。
+因为在stack类里我们定义了一个arr作为栈的`基址`。当使用浅拷贝的时候，拷贝过去的仍然是这个基址。
+当程序准备退出时，stack1和stack2都要调用析构函数进行销毁，无论哪个对象先调用析构进行销毁，等到下一个对象要销毁时，发现arr那块空间的支配权已经还给了系统了，同时`多次的内存空间释放必然会造成程序崩溃`。
+![](https://tuchuang-1317757279.cos.ap-chengdu.myqcloud.com/%E6%88%90%E5%91%98%E5%87%BD%E6%95%B06.png)
+所以我们需要自行书写一个拷贝构造函数。
+```c++
+stack(const stack& stack1) {
+		arr = (int*)malloc(sizeof(int) * stack1.capacity);
+		memcpy(arr, stack1.arr, sizeof(int) * stack1.currentsize);
+		capacity = stack1.capacity;
+		currentsize = stack1.currentsize;
+	}
+```
+
+拷贝构造的使用方式为：
+```c++
+stack s2(s1);   //s2为要拷贝的目标，s1为拷贝的原本
+```
+
+总结一下构造函数的适用场景：
+1. 如上所示的stack s2(s1)，利用一个`已存在的对象来创建新对象`。
+2. 函数中有`参数`为类类型的对象。如add(date d1)这个函数，调用了d1这个对象，那么在传参的过程中必然会使用到拷贝构造。
+3. 函数`返回值`有类类型对象也是同样道理。
+
+
+# ♈️运算符重载
+
+
+## ♊️基本概念
+在讲赋值运算符重载前先来说一下运算符重载。赋值运算符重载是运算符重载的一种特例，它主要用于实现自定义类型的深拷贝。这个我们后面再说。
+
+运算符重载的引入是为了增强c\+\+的代码可读性。其函数名为：` operator接需要重载的运算符号`。
+并且在重载运算符中必须含有`至少一个类类型`的参数。
+
+比如重载一个判断两日期是否相等的==。
+```c++
+bool operator==(const date& d1) {
+		return d1._year == _year && d1._month == _month && d1._day == _day;
+	}
+```
+
+请注意： `::` ,`sizeof`,`?:`,` .`,` .*`不可被重载！
+
+## ♋️ 赋值运算符重载
+
+既然是赋值运算符重载，那么必然和普通的运算符重载有些许的区别，最明显的地方就在于`返回值`。
+赋值运算符的返回值类型应该是一个`引用`，其目的是`支持连续赋值`。比如a=b=c，如果仍然按照上面的bool型返回，a=b判断后又该如何去判断c呢？那么肯定会返回一个类对象的引用。
+参数类型也常用引用，目的是为了`提高效率`。
+
+```c++
+date& operator=(const date& d1) {
+		_year = d1._year;
+		_day = d1._day;
+		_month = d1._month;
+		return *this;
+	}
+```
+如上，*this的用法是需要重点理解的。
+在C\+\+中，return *this是一个`返回当前对象引用`的语句，常用于`实现链式调用`。例如：
+
+```c++
+class Class {
+public:
+    Class& func1() {
+    // do something
+        return *this;
+    }
+    Class& func2() {
+     // do something
+        return *this;
+    }
+};
+```
+在上面的示例中，func1()和func2()都返回MyClass类型的对象引用，因此可以在它们之间进行链式调用，如下所示：
+
+```c++
+Class obj;
+obj.func1().func2();
+```
+
+这样的代码能够更加简洁和易读。同时，使用return *this也可以避免出现`多余的对象拷贝`操作，提高代码的效率。\*this代表着返回当前对象，return \*this与date &作为返回值，则代表返回引用，引用就不必经过许多繁琐的拷贝工作，也就提高了效率。
+
+c\+\+也规定：` 赋值运算重载只能是类的成员函数`！
+其中比较重要的一点原因：赋值运算符是`作用于对象`上的，而对象是类的实例，因此赋值运算符必须能够访问类的私有成员，只有`类的成员函数才能够访问类的私有成员`，因此赋值运算符重载只能作为类的成员函数来定义。除此之外，赋值运算符重载还需要`返回一个对象的引用`，这个引用指向赋值后的对象。如果赋值运算符重载作为全局函数或友元函数来定义，则无法访问对象的私有成员，并且无法返回对象的引用，因此无法实现赋值运算符的重载。
+
+
+当用户未显式实现时，编译器也会自动生成一个`默认`的赋值运算符重载，以值的方式`逐字节`拷贝。
+那么如果还是date这种类，直接使用默认的即可。
+
+```c++
+void assignment(date& d1) {
+		(*this) = d1;
+	}
+    date d1(22,22,22);
+	date d2;
+	d2.assignment(d1);
+```
+
+编译结果：
+<img src='https://tuchuang-1317757279.cos.ap-chengdu.myqcloud.com/%E6%88%90%E5%91%98%E5%87%BD%E6%95%B07.png'>
+
+但要是stack这样的类就不行了。s2=s1，将s1的内容拷贝给s2，那么s2的空间丢失不说，最终释放两次相同的空间也一定会造成程序崩溃。所以stack这样的类需要的是`深拷贝`。
+
+## ♑️一些运算符重载示例
+
+```c++
+bool operator<(const date& x)
+{
+	if (_year < x._year)
+	{
+		return true;
+	}
+	else if (_year == x._year && _month < x._month)
+	{
+		return true;
+	}
+	else if (_year == x._year && _month == x._month && _day < x._day)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+bool operator==(const date& x)
+{
+	return _year == x._year
+		&& _month == x._month
+		&& _day == x._day;
+}
+
+bool operator<=(const date& x)
+{
+	return *this < x || *this == x;
+}
+
+bool operator>(const date& x)
+{
+	return !(*this <= x);
+}
+
+bool operator>=(const date & x)
+{
+	return !(*this < x);
+}
+
+bool operator!=(const date& x)
+{
+	return !(*this == x);
+}
+date operator+(int day)
+{
+	date tmp(*this);
+	tmp += day;
+	return tmp;
+}
+// 前置++
+date& operator++()
+{
+	*this += 1;
+	return *this;
+}
+
+// 后置++
+// 增加这个int参数不是为了接收具体的值，仅仅是占位，跟前置++构成重载
+date operator++(int)
+{
+	date tmp = *this;
+	*this += 1;
+	
+	return tmp;
+}
+```
+
+
+
 
