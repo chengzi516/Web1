@@ -33,7 +33,7 @@ nav:
       item:
         - name:  分站
           link:  https://chengzi516.netlify.app/
-          icon:  https://tuchuang-1317757279.cos.ap-chengdu.myqcloud.com/%E5%B0%8F%E7%8B%BC1.jpeg
+          icon:  https://tuchuang-1317757279.cos.ap-chengdu.myqcloud.com/%E5%B0%8F%E7%8B%BC2.jpeg
     - title: 项目
       item:
         - name: 暂无
@@ -513,9 +513,9 @@ article_double_row: true
 # The top_img settings of home page
 # default: top img - full screen, site info - middle (默认top_img全屏，site_info在中间)
 # The position of site info, eg: 300px/300em/300rem/10% (主页标题距离顶部距离)
-index_site_info_top:
+index_site_info_top: 
 # The height of top_img, eg: 300px/300em/300rem (主页top_img高度)
-index_top_img_height:
+index_top_img_height:  
 
 # The user interface setting of category and tag page (category和tag页的UI设置)
 # index - same as Homepage UI (index 值代表 UI将与首页的UI一样)
