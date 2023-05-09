@@ -127,7 +127,7 @@ disable_top_img: false
 index_img: false
 
 # If the banner of page not setting, it will show the top_img
-default_top_img: false
+default_top_img:  false
 
 # The banner image of archive page
 archive_img: false
@@ -1024,7 +1024,7 @@ post_head_ai_description:
   randomNum: 3 # 按钮最大的随机次数，也就是一篇文章最大随机出来几种
   basicWordCount: 1999 # 最低获取字符数, 最小1000, 最大1999
   key:  L8D8wIkkBQjBh5rP7u4r
-  Referer:  https://chengzi-516.netlify.app/
+  Referer:  https://chengzi516.top/
 
 # Inject
 # Insert the code to head (before '</head>' tag) and the bottom (before '</body>' tag)
