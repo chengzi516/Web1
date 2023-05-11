@@ -7,7 +7,7 @@ tags:
   - c语言
 date: 2023-03-20 16:02:18
 categories: 
-- 力扣
+- 刷题
 ---
 
 > 来源：[622.设计循环队列](https://leetcode.cn/problems/design-circular-queue/)
