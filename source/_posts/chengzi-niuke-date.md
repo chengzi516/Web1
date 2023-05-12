@@ -6,7 +6,7 @@ tags:
 - c++
 categories:
 - 刷题
-
+ai: ture
 cover: https://tuchuang-1317757279.cos.ap-chengdu.myqcloud.com/%E7%89%9B%E5%AE%A2%E7%BD%91.png
 ---
 

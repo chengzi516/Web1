@@ -8,6 +8,7 @@ tags:
 date: 2023-03-20 16:02:18
 categories: 
 - 刷题
+ai: ture
 ---
 
 > 来源：[622.设计循环队列](https://leetcode.cn/problems/design-circular-queue/)

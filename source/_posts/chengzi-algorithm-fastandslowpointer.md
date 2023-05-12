@@ -9,6 +9,7 @@ categories:
 - 力扣
 swiper_index: 7
 date: 2023-03-09 19:29:52
+ai: ture
 ---
 > 本章讲述的例题来自leetcode [141.环形链表1](https://leetcode.cn/problems/linked-list-cycle/description/),[142.环形链表2](https://leetcode.cn/problems/linked-list-cycle-ii/description/)，旨在利用双指针解决此类型的问题。
 

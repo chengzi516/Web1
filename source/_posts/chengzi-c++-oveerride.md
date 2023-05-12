@@ -9,6 +9,7 @@ tags:
 - 编译
 categories:
 - c/c++
+ai: ture
 ---
 
 

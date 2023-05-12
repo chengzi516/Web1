@@ -8,6 +8,7 @@ abbrlink: e7490f5a
 date: 2023-03-15 21:23:18
 categories: 
 - 刷题
+ai: ture
 ---
 题目来源：leetcode [138.复制带随机指针的链表](https://leetcode.cn/problems/copy-list-with-random-pointer)
 给你一个长度为 n 的链表，每个节点包含一个额外增加的随机指针 random ，该指针可以指向链表中的任何节点或空节点。
