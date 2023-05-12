@@ -1,6 +1,6 @@
 ---
 title: 【c++】c++支持的引用和c中的指针孰胜孰劣？
-cover: https://tuchuang-1317757279.cos.ap-chengdu.myqcloud.com/%E5%BC%95%E7%94%A8-5.png
+cover: https://tuchuang-1317757279.cos.ap-chengdu.myqcloud.com/c++.png
 tags:
   - c++
   - 引用

@@ -1,6 +1,6 @@
 ---
 title: 【c++】相较于c，c++是如何支持重载的？
-cover: 'https://tuchuang-1317757279.cos.ap-chengdu.myqcloud.com/%E5%87%BD%E6%95%B0%E9%87%8D%E8%BD%BD%E5%B0%81%E9%9D%A2.png'
+cover: 'https://tuchuang-1317757279.cos.ap-chengdu.myqcloud.com/c++.png'
 date: 2023-04-23 11:38:01
 updated: 2023-04-23 11:38:01
 tags: 

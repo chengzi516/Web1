@@ -1,7 +1,7 @@
 ---
 title: 【c++】如何使用默认成员函数
 date: 2023-04-29 11:11:02
-cover: https://tuchuang-1317757279.cos.ap-chengdu.myqcloud.com/%E6%88%90%E5%91%98%E5%87%BD%E6%95%B01.png
+cover: https://tuchuang-1317757279.cos.ap-chengdu.myqcloud.com/c++.png
 tags:
 - 成员函数
 - 类与对象
