@@ -7,7 +7,7 @@ tags:
 - c++
 categories: 
 - 数据结构与算法
-cover: https://tuchuang-1317757279.cos.ap-chengdu.myqcloud.com/%E5%8D%95%E9%93%BE%E8%A1%A8%E5%AE%9E%E7%8E%B03.png
+cover: https://tuchuang-1317757279.cos.ap-chengdu.myqcloud.com/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.jpg
 ai: ture
 ---
 

@@ -1,6 +1,6 @@
 ---
 title: 【算法】链式二叉树里的遍历与分治思想
-cover: https://images.xiaozhuanlan.com/photo/2019/fa65550a2db8de371ee88581d7fa24f1.gif
+cover: https://tuchuang-1317757279.cos.ap-chengdu.myqcloud.com/%E7%AE%97%E6%B3%95.png
 tags:
 - 算法
 - 二叉树

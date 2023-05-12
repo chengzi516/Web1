@@ -20,7 +20,7 @@ menu:
   #     站3: https://taylor516.github.io/ || fa fa-cloud
    关于:
      关于我: /about/ || anzhiyu-icon-paper-plane
-     闲言碎语: /essay/ || anzhiyu-icon-lightbulb
+     #闲言碎语: /essay/ || anzhiyu-icon-lightbulb
      随便逛逛: javascript:toRandomPost() || anzhiyu-icon-shoe-prints1
 
 # nav相关配置

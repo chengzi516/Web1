@@ -1,12 +1,12 @@
 ---
 title: 【leetcode】双指针巧解判断链表是否有环的问题
-cover: https://tuchuang-1317757279.cos.ap-chengdu.myqcloud.com/1610173947-QjrHlC-LeetCode.png
+cover: https://tuchuang-1317757279.cos.ap-chengdu.myqcloud.com/%E7%AE%97%E6%B3%95.png
 tags:
   - 刷题
   - c语言
 abbrlink: 17edd14a
 categories: 
-- 力扣
+- 刷题
 swiper_index: 7
 date: 2023-03-09 19:29:52
 ai: ture

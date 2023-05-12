@@ -1,6 +1,6 @@
 ---
 title: 【算法】二叉树里的层序遍历与完全二叉树的判断
-cover: 'https://imgbed.link/file/21264'
+cover: https://tuchuang-1317757279.cos.ap-chengdu.myqcloud.com/%E7%AE%97%E6%B3%95.png
 tags:
   - 算法
   - 二叉树
