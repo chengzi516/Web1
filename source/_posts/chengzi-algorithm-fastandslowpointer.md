@@ -1,6 +1,6 @@
 ---
 title: 【leetcode】双指针巧解判断链表是否有环的问题
-cover: https://tuchuang-1317757279.cos.ap-chengdu.myqcloud.com/%E7%AE%97%E6%B3%95.png
+cover: https://tuchuang-1317757279.cos.ap-chengdu.myqcloud.com/1610173947-QjrHlC-LeetCode.png
 tags:
   - 刷题
   - c语言
