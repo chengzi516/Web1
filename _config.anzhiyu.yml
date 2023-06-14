@@ -4,9 +4,9 @@ menu:
      分类: /categories/ || anzhiyu-icon-shapes
      标签: /tags/ || anzhiyu-icon-tags
 
-   友链:
+   #友链:
      #友人帐: /link/ || anzhiyu-icon-link
-     好文推送: /fcircle/ || anzhiyu-icon-artstation
+     #好文推送: /fcircle/ || anzhiyu-icon-artstation
      #留言板: /comments/ || anzhiyu-icon-envelope
 
   # 我的:
@@ -416,18 +416,18 @@ footer:
     - link: https://hexo.io/ #徽标指向网站链接
       shields: https://npm.elemecdn.com/anzhiyu-blog@2.1.5/img/badge/Frame-Hexo.svg #徽标API
       message: 博客框架为Hexo_v5.4.0 #徽标提示语
-    - link: https://anzhiy.cn/
-      shields: https://pan.anzhiy.cn/d/anzhiyu/svg/Theme-AnZhiYu-2E67D3.svg
-      message: 本站使用AnZhiYu主题
+    #- link: https://anzhiy.cn/
+      #shields: https://pan.anzhiy.cn/d/anzhiyu/svg/Theme-AnZhiYu-2E67D3.svg
+      #message: 本站使用AnZhiYu主题
     - link: https://github.com/
       shields: https://npm.elemecdn.com/anzhiyu-blog@2.1.5/img/badge/Source-Github.svg
       message: 本站项目由Github托管
     - link: http://creativecommons.org/licenses/by-nc-sa/4.0/
       shields: https://npm.elemecdn.com/anzhiyu-blog@2.2.0/img/badge/Copyright-BY-NC-SA.svg
       message: 本站采用知识共享署名-非商业性使用-相同方式共享4.0国际许可协议进行许可
-    - link: https://www.jsdelivr.com/
-      shields: https://img.shields.io/badge/CDN-jsDelivr-orange?style=flat&logo=jsDelivr
-      message: 本站使用JsDelivr为静态资源提供CDN加速  
+    #- link: https://www.jsdelivr.com/
+      #shields: https://img.shields.io/badge/CDN-jsDelivr-orange?style=flat&logo=jsDelivr
+      #message: 本站使用JsDelivr为静态资源提供CDN加速  
 
 # Analysis
 # --------------------------------------
