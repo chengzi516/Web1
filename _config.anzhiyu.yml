@@ -34,6 +34,7 @@ nav:
         - name:  github
           link:  https://github.com/chengzi516
           icon:  https://tuchuang-1317757279.cos.ap-chengdu.myqcloud.com/github.svg
+        - name:  备用站点  
           link:  https://chengzi516.netlify.app/
           icon:  https://tuchuang-1317757279.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%AB%99%E5%BC%80%E5%8F%91.svg
     - title: 项目
