@@ -31,14 +31,16 @@ nav:
   menu:
     - title: 网页
       item:
-        - name:  分站
+        - name:  github
+          link:  https://github.com/chengzi516
+          icon:  https://tuchuang-1317757279.cos.ap-chengdu.myqcloud.com/github.svg
           link:  https://chengzi516.netlify.app/
-          icon:  https://tuchuang-1317757279.cos.ap-chengdu.myqcloud.com/%E5%B0%8F%E7%8B%BC2.jpeg
+          icon:  https://tuchuang-1317757279.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%AB%99%E5%BC%80%E5%8F%91.svg
     - title: 项目
       item:
-        - name: 暂无
-          link: 
-          icon: 
+        - name: tcp通讯demo
+          link: https://github.com/chengzi516/TCP-communication-project
+          icon: https://tuchuang-1317757279.cos.ap-chengdu.myqcloud.com/%E9%A1%B9%E7%9B%AE.svg
 
 # Code Blocks (代码相关)
 # --------------------------------------
@@ -940,9 +942,9 @@ home_top:
     swiper_init: https://npm.elemecdn.com/anzhiyu-theme-static@1.0.0/swiper/swiper_init.js # swiper初始化方法
   banner:
     tips: welcome
-    title: 来到我的地球小窝
+    title: 简单的TCP通讯项目
     image: https://tuchuang-1317757279.cos.ap-chengdu.myqcloud.com/syberpunk.png
-    link: 
+    link:  https://github.com/chengzi516/TCP-communication-project
 
 # 朋友圈配置
 friends_vue:
