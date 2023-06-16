@@ -38,7 +38,7 @@ Makefile 执行过程中出错：make: *** No rule to make target ‘ all ‘，
 # :snowflake: 插入图片后运行不显示
 这个问题很常见，解决方法也很多，我在网上看到了很多种解决方案，在这里贴几种常见且靠谱的办法。
 方案1. 去Qt的项目中构建设置中，`Shandow build`勾选项去掉。
-<img src='https://tuchuang-1317757279.cos.ap-chengdu.myqcloud.com/debug-qt1.png'>
+<img src='https://tuchuang-1317757279.cos.ap-chengdu.myqcloud.com/qt1.png'>
 方案2. 如果是QWidget类不显示，需要重新实现`paintEvent()`函数。
 ```c++
 void Widget::paintEvent(QPaintEvent *)
