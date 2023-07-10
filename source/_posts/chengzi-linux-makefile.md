@@ -113,17 +113,13 @@ main.o: main.c utils.h
 	$(CC) $(CFLAGS) -c main.c
 ```
 
-在上面的例子中，main.o是目标文件名，main.c和utils.h是其依赖关系，\$(CC) \$(CFLAGS) -c main.c是生成目标文件的具体命令。
+在上面的例子中，main.o是目标文件名，main.c和utils.h是其依赖关系，\$ ...... main.c是生成目标文件的具体命令。
 
 `伪目标`
 伪目标是指不对应任何文件的目标，其主要作用是在Makefile中定义一些常用的操作，如清除临时文件、生成文档等。伪目标的名称前面需要加上.PHONY关键字，以告诉Makefile不要将其当做文件名来处理。例如：
-
 ```
-.PHONY: clean
-clean:
-    rm -rf *.o
-
-```    
+clean: rm -f mycode
+```
 
 在上面的例子中，clean是伪目标的名称，rm -rf *.o是清除临时文件的具体命令。
 来看一个具体的例子：
