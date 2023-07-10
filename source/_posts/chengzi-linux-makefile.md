@@ -9,14 +9,14 @@ cover: https://tuchuang-1317757279.cos.ap-chengdu.myqcloud.com/linux.jpg
 ai: true
 ---
 
-# 简介
+# :house_with_garden:简介
 今天学习linux，第一次遇到了Makefile，写下这篇文章记录一些学到的知识。
 Makefile是一种常用的构建工具，用于`自动化编译、链接和部署程序`。它最初是为Unix系统开发的，但现在已经广泛用于各种操作系统和编程语言中。Makefile的核心思想是基于依赖关系自动化构建，它会根据文件的修改时间和依赖关系来确定哪些文件需要重新编译和链接。
 这也正是makefile的主要功能。
 一个特别大的项目，一般来说会有很多的源文件，被分门别类的放在不同的目录中，有时候也会在一个目录里存放了多个程序的源代码。这时，如何对这些代码的编译就成了个问题。Makefle就是为这个问题而生的，它定义了一套规则，`决定了哪些文件要先编译，哪些文件后编译，哪些文件要重新编译`。
 不过在了解makefile之前，还得先补习一点关于程序编译的知识点。
 
-# linux与gcc/g++
+# :school:linux与gcc/g++
 在Linux系统中，`gcc/g++`是一款非常常用的编译器。它可以将C/C++的源代码`编译、汇编、链接`，生成可执行文件或库文件。
 
 在编译过程中，一个代码文件需要经过预处理、编译、汇编、连接等步骤才能转化为可执行的程序。
@@ -79,7 +79,7 @@ gcc hello.o –o hello
 
 以上就是一些关于gcc/g++的基础知识点了。接下来进入正题。
 
-# linux项目自动化构建工具-make/Makefile
+# :office:linux项目自动化构建工具-make/Makefile
 正如上面所铺垫的知识点，MakeFile是一个GNU推出的编译开发工具，能为`编译过程提供服务`。将c、.cpp、.h文件编译成最后能够执行的.exe文件就是makefile的职责。
 你可以手动的一步一步的编译，也可以用MakeFile来辅助你编译，用了MakeFile除了能提升效率，还能避免人为操作导致错误。
 这一节有两个重要的概念要理清楚：
@@ -122,6 +122,7 @@ main.o: main.c utils.h
 .PHONY: clean
 clean:
     rm -rf *.o
+
 ```    
 
 在上面的例子中，clean是伪目标的名称，rm -rf *.o是清除临时文件的具体命令。
@@ -140,7 +141,12 @@ mycode:hello.c
     gcc hello.c -o mycode
 ```
 
-此时使用make指令就可以自动的启用makefile文件了。
+此时直接输入make指令就可以自动的启用makefile文件了。
+
+```
+make
+```
+
 这里的工作原理就是：
 1. make会在当前目录下找名字叫“Makefile”或“makefile”的文件。
 2. 如果找到，它会找文件中的第一个目标文件（target），在上面的例子中，他会找到“mycode”这个文件，
