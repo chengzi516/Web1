@@ -43,7 +43,7 @@ Makefile是一种常用的构建工具，用于`自动化编译、链接和部�
 总的来说，动态库虽然有效的节约了资源（不用自己买电脑），但一旦缺失，几乎各个程序都会无法运行（都上不了网）。而静态库虽然可以让程序独立的运行，但体积大比较消耗资源（单独买电脑价格高昂）是他的弊病。
 
 这么说了一大串可能对初次接触的同学有些困难，可以结合图片来看一下。
-<img src="../photo/linux/makefile1.png">
+<img src="https://tuchuang-1317757279.cos.ap-chengdu.myqcloud.com/makefile1.png">
 可以看到从我们写出来的源文件到变成一个可执行的exe文件，大概经过了什么步骤。
 
 
@@ -123,18 +123,23 @@ main.o: main.c utils.h
 clean:
     rm -rf *.o
 ```    
+
 在上面的例子中，clean是伪目标的名称，rm -rf *.o是清除临时文件的具体命令。
 来看一个具体的例子：
 比如现在有一个hello.c的源文件，我们需要通过make命令将其转换为可执行的文件。
 首先创建一个新的文件makefile或者Makefile都行。
+
 ```
 touch makefile
 ```
+
 对makefile进行编辑，输入如下内容：
+
 ```
 mycode:hello.c
     gcc hello.c -o mycode
 ```
+
 此时使用make指令就可以自动的启用makefile文件了。
 这里的工作原理就是：
 1. make会在当前目录下找名字叫“Makefile”或“makefile”的文件。
@@ -154,6 +159,7 @@ gcc -S hello.i -o hello.s
 hello.i: hello.c                                                                                                                                                                                             
 gcc -E hello.c -o hello.i    
 ```
+
 这里可以看出，mycode并没有与之对应的hello.o文件，那么此时make就会去寻找target为hello.o的target的文件与其依赖关系，若是没有hello.o的就会去找hello.s的。
 执行makefile命令后会显示如下指令顺序：
 
