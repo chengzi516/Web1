@@ -944,7 +944,7 @@ home_top:
   banner:
     tips: welcome
     title: 简单的TCP通讯项目
-    image: https://tuchuang-1317757279.cos.ap-chengdu.myqcloud.com/stellarium.gif  #https://tuchuang-1317757279.cos.ap-chengdu.myqcloud.com/%E9%93%B6%E7%8B%BC.GIF 
+    image: https://tuchuang-1317757279.cos.ap-chengdu.myqcloud.com/%E6%B8%9A%E8%96%B0.gif
     link:  https://github.com/chengzi516/TCP-communication-project
 
 # 朋友圈配置
