@@ -102,13 +102,15 @@ namespace myclass
 	template<class T>
 	class vector
 	{
+	public:
+	    typedef T* iterator;   //迭代器因为很重要，也在这里一并写上了。
+		typedef const T* const_iterator;	
     private:
 		iterator _start = nullptr;
 		iterator _finish = nullptr;
 		iterator _endofstorage = nullptr;       
 	public:
-		typedef T* iterator;   //迭代器因为很重要，也在这里一并写上了。
-		typedef const T* const_iterator;
+		
 
 		iterator begin()
 		{
