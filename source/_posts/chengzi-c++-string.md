@@ -673,7 +673,7 @@ void resize(size_t n, char ch = '\0')
 
 ```cpp
 cout<<s<<endl;
-``````
+```
 
 这样的效果，就需要重载>>与<<操作符。
 
