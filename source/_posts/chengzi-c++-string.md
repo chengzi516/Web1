@@ -2,7 +2,7 @@
 title: 【c++】string库的常用函数的模拟实现
 date: 2023-07-17 13:37:44
 tags:
-- c语言
+- c++
 - string
 categories:
 - c/c++

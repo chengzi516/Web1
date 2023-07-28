@@ -2,7 +2,7 @@
 title: 【c++】vector的简单模拟实现
 date: 2023-07-24 20:55:30
 tags:
-- c语言
+- c++
 - vector
 categories:
 - c/c++
