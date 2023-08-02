@@ -1,6 +1,6 @@
 - class_name: 关于页
   subtitle: 生活明朗，万物可爱✨
-  avatarImg: https://tuchuang-1317757279.cos.ap-chengdu.myqcloud.com/avatar2.jpg
+  avatarImg: https://tuchuang-1317757279.cos.ap-chengdu.myqcloud.com/%E4%B8%87%E5%9C%A3%E8%A1%97%E5%A4%B4%E5%83%8F.jpg
   name: chengzi
   description: 是一名 学生，独立开发者，博主
   aboutsiteTips:
@@ -41,7 +41,7 @@
   personalities:
     author_name: 提倡者
     personality_type: INFJ-A
-    photo_url: https://tuchuang-1317757279.cos.ap-chengdu.myqcloud.com/chengzi.jpg
+    photo_url: https://tuchuang-1317757279.cos.ap-chengdu.myqcloud.com/%E8%87%AA%E6%8B%8D1.jpg
     personality_img: https://static.neris-assets.com/images/personality-types/avatars/infj-advocate.svg
     name_url: https://www.16personalities.com/ch/esfj-%E4%BA%BA%E6%A0%BC
   maxim:

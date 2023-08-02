@@ -116,11 +116,11 @@ katex:
 # --------------------------------------
 
 # Favicon（网站图标）
-favicon: https://tuchuang-1317757279.cos.ap-chengdu.myqcloud.com/avatar2.jpg
+favicon: https://tuchuang-1317757279.cos.ap-chengdu.myqcloud.com/%E4%B8%87%E5%9C%A3%E8%A1%972.jpg
 
 # Avatar (头像)
 avatar:
-  img: https://tuchuang-1317757279.cos.ap-chengdu.myqcloud.com/avatar2.jpg
+  img: https://tuchuang-1317757279.cos.ap-chengdu.myqcloud.com/%E4%B8%87%E5%9C%A3%E8%A1%972.jpg
   effect: true
 
 # Disable all banner image
