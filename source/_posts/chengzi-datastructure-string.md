@@ -1,5 +1,5 @@
 ---
-title: 【c++】string库的常用函数的模拟实现
+title: 【c++】string库的简单模拟
 date: 2023-07-17 13:37:44
 tags:
 - c++
