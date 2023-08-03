@@ -4,10 +4,11 @@ date: 2023-07-25 16:42:17
 tags:
 - c++
 - list
+- 数据结构
 categories:
-- c/c++
+- 数据结构与算法
 ai: ture
-cover: https://tuchuang-1317757279.cos.ap-chengdu.myqcloud.com/c++.png
+cover: https://tuchuang-1317757279.cos.ap-chengdu.myqcloud.com/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.jpg
 ---
 
 # :imp:介绍list

@@ -4,10 +4,11 @@ date: 2023-07-17 13:37:44
 tags:
 - c++
 - string
+- 数据结构
 categories:
-- c/c++
+- 数据结构与算法
 ai: ture
-cover: https://tuchuang-1317757279.cos.ap-chengdu.myqcloud.com/c++.png
+cover: https://tuchuang-1317757279.cos.ap-chengdu.myqcloud.com/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.jpg
 ---
 
 >最近学到了string的相关的库，于是为了加深对函数的理解便打算模拟实现一下常用的string库函数，也顺便补习了一些之前不太理解的语法或概念。
