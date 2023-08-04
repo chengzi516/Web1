@@ -1,5 +1,5 @@
 ---
-title: 【c++】vector的简单模拟
+title: 【数据结构】vector的简单模拟
 date: 2023-07-24 20:55:30
 tags:
 - c++

@@ -1,5 +1,5 @@
 ---
-title: 【c++】string库的简单模拟
+title: 【数据结构】string的简单模拟
 date: 2023-07-17 13:37:44
 tags:
 - c++

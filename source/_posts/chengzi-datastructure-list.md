@@ -1,5 +1,5 @@
 ---
-title: 【c++】list的简单模拟
+title: 【数据结构】list的简单模拟
 date: 2023-07-25 16:42:17
 tags:
 - c++
