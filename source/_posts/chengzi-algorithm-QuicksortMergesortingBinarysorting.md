@@ -434,7 +434,9 @@ int bsearch_2(int l, int r)
 
 本题的核心思想就是寻找`特定数字的起始与终止坐标`，那么就需要利用到上面讲的两种区间了，蓝色的可以找到终止，红色的可以找到起始。不要将二分只是局限于寻找一个值，你可以利用check函数寻找到满足某个条件的`临界点`。
 代码如下：
+
 ```c
+
 #include<stdio.h>
 int check1(int *arr,int num,int q){
     if(arr[num]>=q)
