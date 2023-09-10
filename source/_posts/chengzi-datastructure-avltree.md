@@ -1,5 +1,5 @@
 ---
-title: 【数据结构】AVL树
+title: 【数据结构】AVL树的插入与旋转
 date: 2023-09-08 21:21:46
 tags:
 - 数据结构
@@ -11,7 +11,7 @@ cover: https://tuchuang-1317757279.cos.ap-chengdu.myqcloud.com/%E6%95%B0%E6%8D%A
 ai: ture
 ---
 
-# 引入
+# :house:引入
 
 >AVL树是一种自平衡的二叉搜索树，它可以在插入和删除操作之后自动调整树的结构，以保持树的`平衡性`。AVL树是由计算机科学家Adelson-Velsky和Landis于1962年提出的，它的名称来源于他们的姓氏的首字母。
 AVL树是`平衡的搜索二叉树`。
@@ -33,10 +33,10 @@ AVL树是`平衡的搜索二叉树`。
 
 平衡因子一般是`右子树高度减去左子树高度`。其取值只能是-1，0，1三个中的一个。
 
-# 代码示例
+# :house_with_garden:代码示例
 
 
-## AVLTree类
+## :office:AVLTree类
 
 ```cpp
 #pragma once
@@ -211,7 +211,7 @@ bool Insert(const int& key)
 右左旋（Right-Left Rotation）：当一个节点的`右子树的左子树比右子树的右子树高度高`时，需要进行右左旋操作。右左旋操作先对当前节点的右子节点进行右旋操作，然后再对当前节点进行左旋操作。
 
 
-## 左旋
+## :post_office:左旋
 
 当在子树的`右子树的右子树`(RR型)上插入新节点时，需要使用左旋操作。
 
@@ -291,7 +291,7 @@ void RotateL(Node* parent)
 ```
 
 
-## 右旋
+## :love_hotel:右旋
 
 右旋和左旋同理，不过是LL型，也就是插入到子树的左子树的左子树位置上。
 核心操作为
@@ -313,6 +313,7 @@ void RotateR(Node* parent)
 
 		Node* ppnode = parent->_parent;
 		cur->_right = parent;
+		parent->_parent = cur;
 
 		if (ppnode == nullptr)
 		{
@@ -342,7 +343,7 @@ void RotateR(Node* parent)
 >总结一下这两种简单的旋转，第一步就是看哪边高，哪边高了就通过旋转的办法降低高度，左边高了就往右边旋，右边高了就往左边旋，在旋转过程中别忘了节点的parent需要更新，对于cur的parent更新时，需要判断parent的parent来选择不同的代码逻辑。
 
 
-## 左右旋
+## :church:左右旋
 
 在某个子树的左子树的右子树上插入新节点时需要左右旋。(LR型)
 
@@ -356,9 +357,22 @@ void RotateR(Node* parent)
              5(new)        1
 ```
 
+```cpp
+void RotateLR(Node* parent)
+	{
+		Node* cur = parent->_left;
+		Node* curright = cur->_right;
+		int bf = curright->_bf;
+
+		RotateL(parent->_left);
+		RotateR(parent);
+
+	
+	}
+```
 
 
-## 右左旋
+## :speedboat:右左旋
 
 同理，在某个子树的右子树的左子树上插入节点时需要右左旋。(RL型)
 
@@ -372,28 +386,6 @@ void RotateRL(Node* parent)
 		RotateR(parent->_right);
 		RotateL(parent);
 
-		if (bf == 0)
-		{
-			cur->_bf = 0;
-			curleft->_bf = 0;
-			parent->_bf = 0;
-		}
-		else if (bf == 1)
-		{
-			cur->_bf = 0;
-			curleft->_bf = 0;
-			parent->_bf = -1;
-		}
-		else if (bf == -1)
-		{
-			cur->_bf = 1;
-			curleft->_bf = 0;
-			parent->_bf = 0;
-		}
-		else
-		{
-			assert(false);
-		}
 	}
 
 ```
