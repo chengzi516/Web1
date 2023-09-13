@@ -49,9 +49,9 @@ using namespace std;
 struct AVLTreeNode
 {
 	int _key;   
-	AVLTreeNode<K, V>* _left;  //节点的左右孩子以及父节点都必须有所指向，后面会用
-	AVLTreeNode<K, V>* _right;
-	AVLTreeNode<K, V>* _parent;
+	AVLTreeNode* _left;  //节点的左右孩子以及父节点都必须有所指向，后面会用
+	AVLTreeNode* _right;
+	AVLTreeNode* _parent;
 	int _bf;  // balance factor 平衡因子
 
 	AVLTreeNode(const int& key)
