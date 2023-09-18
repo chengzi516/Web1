@@ -12,7 +12,7 @@ cover: https://tuchuang-1317757279.cos.ap-chengdu.myqcloud.com/%E6%95%B0%E6%8D%A
 ---
 
 
-# 哈希表概念
+# 引入
 
 查找是编程里无法绕开的一环，在顺序结构或者树结构中，由于不存在某种元素与位置的映射关系，所以顺序查找时间复杂度为`O(N)`，平衡树中为树的高度，即`O($log_2 N$)`，搜索的效率取决于搜索过程中`元素的比较次数`。
 那么一种较为理想的查找就是可以不经过任何比较，`一次`直接从表中得到要搜索的元素。
@@ -100,72 +100,7 @@ namespace hash_bucket
 		{}
 	};
 
-	//因为迭代器和哈希表的实现都会互相利用，所以使用前置声明
-	template<class K, class T, class KeyOfT, class HashFunc>
-	class HashTable;
-
-	template<class K, class T, class KeyOfT, class HashFunc>
-	struct HTIterator
-	{
-		typedef HashNode<T> Node;
-		typedef HTIterator<K, T, KeyOfT, HashFunc> Self;
-
-		Node* _node;
-		HashTable<K, T, KeyOfT, HashFunc>* _pht;
-
-		HTIterator(Node* node, HashTable<K, T, KeyOfT, HashFunc>* pht)
-			:_node(node)
-			,_pht(pht)
-		{}
-
-		T& operator*()
-		{
-			return _node->_data;
-		}
-
-		T* operator->()
-		{
-			return &_node->_data;
-		}
-
-		Self& operator++()
-		{
-			if (_node->_next)
-			{
-				// 当前桶还没完
-				_node = _node->_next;
-			}
-			else
-			{
-				KeyOfT kot;
-				HashFunc hf;
-				size_t hashi = hf(kot(_node->_data)) % _pht->_table.size();
-				// 从下一个位置查找查找下一个不为空的桶
-				++hashi;
-				while (hashi < _pht->_table.size())
-				{
-					if (_pht->_table[hashi])
-					{
-						_node = _pht->_table[hashi];
-						return *this;
-					}
-					else
-					{
-						++hashi;
-					}
-				}
-
-				_node = nullptr;
-			}
-
-			return *this;
-		}
-
-		bool operator!=(const Self& s)
-		{
-			return _node != s._node;
-		}
-	};
+	
 
 	//本篇博客实现hashtable是为了之后的unordered系列容器做准备，也就是map和set
 	// set -> hash_bucket::HashTable<K, K> _ht;
@@ -175,31 +110,7 @@ namespace hash_bucket
 	{
 		typedef HashNode<T> Node;
 
-		// 友元声明
-		template<class K, class T, class KeyOfT, class HashFunc>
-		friend struct HTIterator;
-	public:
-		typedef HTIterator<K, T, KeyOfT, HashFunc> iterator;
-
-		iterator begin()
-		{
-			// 找第一个桶
-			for (size_t i = 0; i < _table.size(); i++)
-			{
-				Node* cur = _table[i];
-				if (cur)
-				{
-					return iterator(cur, this);
-				}
-			}
-
-			return iterator(nullptr, this);
-		}
-
-		iterator end()
-		{
-			return iterator(nullptr, this);
-		}
+		
         //构造和析构函数
 		HashTable()
 		{
@@ -346,4 +257,105 @@ namespace hash_bucket
 ```
 
 
-# q
+### 迭代器实现
+
+```cpp
+    //因为迭代器和哈希表的实现都会互相利用，所以使用前置声明
+	template<class K, class T, class KeyOfT, class HashFunc>
+	class HashTable;
+
+	template<class K, class T, class KeyOfT, class HashFunc>
+	struct HTIterator
+	{
+		typedef HashNode<T> Node;
+		typedef HTIterator<K, T, KeyOfT, HashFunc> Self;
+
+		Node* _node;
+		HashTable<K, T, KeyOfT, HashFunc>* _pht;
+
+		HTIterator(Node* node, HashTable<K, T, KeyOfT, HashFunc>* pht)
+			:_node(node)
+			,_pht(pht)
+		{}
+
+		T& operator*()
+		{
+			return _node->_data;
+		}
+
+		T* operator->()
+		{
+			return &_node->_data;
+		}
+
+		Self& operator++()
+		{
+			if (_node->_next)
+			{
+				// 当前的桶还没结束
+				_node = _node->_next;
+			}
+			else
+			{
+				KeyOfT kot;
+				HashFunc hf;
+				size_t hashi = hf(kot(_node->_data)) % _pht->_table.size();
+				
+				++hashi; //从下一个下标位置开始找
+				while (hashi < _pht->_table.size())
+				{
+					if (_pht->_table[hashi])
+					{
+						_node = _pht->_table[hashi];
+						return *this; //找的到就返回
+					}
+					else
+					{
+						++hashi; //找不到就接着++
+					}
+				}
+
+				_node = nullptr;
+			}
+
+			return *this;  //*this是一个指向当前对象的指针。它用于返回当前对象的引用。
+		}
+
+		bool operator!=(const Self& s)
+		{
+			return _node != s._node;
+		}
+	};
+```
+
+
+在HashTable类里补齐：
+```cpp
+        // 友元声明
+		template<class K, class T, class KeyOfT, class HashFunc>
+		friend struct HTIterator;
+	    public:
+		typedef HTIterator<K, T, KeyOfT, HashFunc> iterator;
+
+		iterator begin()
+		{
+			// 找第一个桶
+			for (size_t i = 0; i < _table.size(); i++)
+			{
+				Node* cur = _table[i];
+				if (cur)
+				{
+					return iterator(cur, this);
+				}
+			}
+
+			return iterator(nullptr, this);
+		}
+
+		iterator end()
+		{
+			return iterator(nullptr, this);
+		}
+```
+
+在C\+\+中，std::unordered_map和std::unordered_set是基于哈希表实现的容器，它们使用哈希表来存储和查找数据。这篇博客是为之后两个容器的实现做一个铺垫。
