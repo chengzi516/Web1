@@ -229,7 +229,7 @@ namespace hash_bucket
 				prev = cur;
 				cur = cur->_next;
 			}
-
+             --_n;
 			return false;
 		}
 

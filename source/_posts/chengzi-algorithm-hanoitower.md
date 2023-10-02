@@ -1,6 +1,7 @@
 ---
 title: 【算法】汉诺塔
 date: 2023-09-18 16:40:08
+cover: https://tuchuang-1317757279.cos.ap-chengdu.myqcloud.com/1610173947-QjrHlC-LeetCode.png
 tags:
   - 刷题
   - c语言
@@ -10,12 +11,14 @@ categories:
 ai: ture
 ---
 
+>这篇博客是很早在csdn上写的，最近碰到汉诺塔的问题又有些不太清楚，就搬运过来了。
+
 【游戏规则】（摘自[百度百科](https://baike.baidu.com/item/%E6%B1%89%E8%AF%BA%E5%A1%94/3468295)）：汉诺塔（Tower of Hanoi），又称河内塔，是一个源于印度古老传说的益智玩具。大梵天创造世界的时候做了三根金刚石柱子，在一根柱子上从下往上按照大小顺序摞着64片黄金圆盘。大梵天命令婆罗门把圆盘`从下面开始按大小顺序重新摆放在另一根柱子上`。并且规定，在`小圆盘上不能放大圆盘`，在三根柱子之间`一次只能移动一个圆盘`。
 
 ---
 在书写汉诺塔的代码前需要掌握其主要的移动思路。
 以`3层`的汉诺塔为例（代码为java）：
-![在这里插入图片描述](https://img-blog.csdnimg.cn/2ec43c9161f04f76a610a62044ac03ae.png)
+<img src='https://img-blog.csdnimg.cn/2ec43c9161f04f76a610a62044ac03ae.png'>
 >解决汉诺塔的核心思路是：A柱和C柱必须`畅通无阻`，也就是1，2必须堆叠在B柱上，只留最下面的3，此时就可以将3从A柱移动至C柱。
 
 解决汉诺塔就是将核心思路不断`拆分实现`。
@@ -45,7 +48,7 @@ hanoi(3,"塔1","塔2","塔3");
 
 构建函数的内部就需要用到`递归`的思路。
 以3层为例，要将其3层从A柱移到C柱，按照上文的思路就需要先将A柱上的两个移动到B柱上。
-![在这里插入图片描述](https://img-blog.csdnimg.cn/244a077457574e5e87e0149afdbb0f97.png)
+<img src='https://img-blog.csdnimg.cn/244a077457574e5e87e0149afdbb0f97.png'>
 
 那么想要达到上图的效果，就需要将C柱作为`中转柱`，B柱此时转换为`目标柱`。
 是不是有点递归的感觉了，要解决3层，就必须先解决上面的2层，要解决2层，就必须先解决1层。当1层放好，就能通过`归`，不断返回直到问题解决。
@@ -69,11 +72,11 @@ hanoi(3,"塔1","塔2","塔3");
 + 当只有一层时，直接从起始移动到目标。
 + 参数的`a，b，c不代表ABC柱`，不要混为一谈，在函数里的abc始终代表`三个状态柱`：起始，中转，目标。
 + 例如n传入为3，那么就是先进行hanoi(n-1,a,c,b)，将n-1层从A柱通过C柱转到B柱上。
-![此步完成](https://img-blog.csdnimg.cn/244a077457574e5e87e0149afdbb0f97.png)
+<img src='https://img-blog.csdnimg.cn/244a077457574e5e87e0149afdbb0f97.png'>
 + 再进行System.out.println(a+"--->"+c); ，3号从A柱移动到C柱。
-![在这里插入图片描述](https://img-blog.csdnimg.cn/a1fff40ee8e3468085f08d7d2e036f8b.png)
+<img src='https://img-blog.csdnimg.cn/a1fff40ee8e3468085f08d7d2e036f8b.png'>
 + 最后一步，hanoi(n-1,b,a,c) ，将这1，2层从B柱通过函数操作，转到C柱上。那么3层汉诺塔就移动完毕。
-![在这里插入图片描述](https://img-blog.csdnimg.cn/c7894ea0418442b6bc2119b888df8452.png)
+<img src='https://img-blog.csdnimg.cn/c7894ea0418442b6bc2119b888df8452.png'>
 
 上述代码已经不需要补充，虽然我们思考是假定其能实现，但程序确实通过递归的思路完成了汉诺塔的移动，先告知自己假定其完成功能是便于自己的理解。这和前文思路也是对应的，一共三步。从宏观上来看是简单明了的。难于理解的地方在于函数参数里的`abc不会一直代表A柱，B柱，C柱`，可能会造成混乱。同时递归的思路也有些绕。
 
@@ -96,9 +99,9 @@ hanoi(3,"塔1","塔2","塔3");
  又因为`a始终代表初始柱，c始终代表目的柱`，所以一直都是a--->c。这个一定要理解。
  当n==1时，1就从A柱移动到C柱了。此时`第一个归`也就是`2层汉诺塔的归`就开始了。
  此时执行  System.out.println(a+"--->"+c)，通过idea的调试可以看到此时的abc代表什么。
- ![在这里插入图片描述](https://img-blog.csdnimg.cn/eeadaaaed3ae437dba2e1dd3a5c0d64b.png)
+<img src='https://img-blog.csdnimg.cn/eeadaaaed3ae437dba2e1dd3a5c0d64b.png'>
 那么a--->c就是从A柱到B柱。这里的ac也是不需要更改的，不管abc代表什么，此时`都是初始柱移到目的柱。`
-![在这里插入图片描述](https://img-blog.csdnimg.cn/26d044fc5ab5432199a3101a39c3b4de.png)
+<img src='https://img-blog.csdnimg.cn/26d044fc5ab5432199a3101a39c3b4de.png'>
 抛开3，只谈1与2，2层的解决思路就是将第一层移到他的中转柱，然后2就可以移动到他的目的柱。
 再看一下汉诺塔的解题步骤
 第一步：
@@ -109,7 +112,7 @@ hanoi(3,"塔1","塔2","塔3");
 + 将中转柱上的`n-1`个圆盘移到目的柱上。
 
 针对2层的汉诺塔，参照上图，已经实现了第一步，2落到了目标柱B柱，1落到了中转柱上。此时就需要进行第二步，将1转到目标柱上去。也就是进入了 hanoi(n-1,b,a,c)这一步，因为n=1也就没有多次递归，直接就将1从C柱移到了B柱。
->此时，完成此步![此步完成](https://img-blog.csdnimg.cn/244a077457574e5e87e0149afdbb0f97.png)
+<img src='https://img-blog.csdnimg.cn/244a077457574e5e87e0149afdbb0f97.png'>
 
 顺利的按照思路走出了第一个递归(1层递归没有算进来)。`要解决3层就先解决2层，解决2层就要解决1层。`
 

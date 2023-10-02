@@ -380,3 +380,773 @@ public:
 	int _rotateCount = 0;
 };
 ```
+
+# set与map的模拟实现
+
+## KeyofT设计
+有了基本的红黑树结构，我们就能动手尝试实现set与map。
+set只需要key，而map需要key和value，如何实现在同一棵红黑树的结构下，同时实现map和set的兼容呢？
+比如我们要实现find函数，在寻找的过程中必然会遇到`比较`的问题，此时map如果是pair的数据结构，比起set一个简单的key来说，比较的逻辑就不太好实现，我们也不能因为这就重新写一棵树。
+所以就有了KeyofT的设计。
+以map为例：
+直接在map类里定义一个新的结构，也可以在类外面定义，以指针的形式引用函数。
+```cpp
+template<class k,class v>
+	class map {
+		struct MapKeyOfT {
+			const k& operator()(const pair<k, v>& kv) {
+				return kv.first;
+			}
+		};
+	private:     
+		RBTree<k, pair< k,v>,MapKeyOfT> _t; 
+		}
+```
+set为了与map保持一致，可以传入两个key：
+```cpp
+template<class k>
+	class set {
+		struct SetKeyOfT {
+			const k& operator()(const k& key) {
+				return key;
+			}
+		};
+	private:
+		RBTree<k, k, SetKeyOfT> _t;
+		}
+```
+完成上面的步骤后，比如find函数就可以修改为这样：
+```cpp
+Node* Find(const K& key)
+	{
+		Node* cur = _root;
+		KeyOfT kot;
+		while (cur)
+		{
+			if (kot(cur->_data) < key)
+			{
+				cur = cur->_right;
+			}
+			else if (kot(cur->_data) > key)
+			{
+				cur = cur->_left;
+			}
+			else
+			{
+				return cur;
+			}
+		}
+
+		return nullptr;
+	}
+```
+
+## 迭代器设计
+有了基本的红黑树结构，我们就能动手尝试实现set与map。
+set只需要一个key，而map需要key和value，且map的value可以被更改，而key同set一样，是不允许被修改的。这些要素都需要被考虑进去。
+所以重点在于迭代器的设计上。
+参照库里的实现，可以发现：
+```cpp
+typedef typename RBTree<k, k, SetKeyOfT>::const_iterator iterator;
+typedef typename RBTree<k, k, SetKeyOfT>::const_iterator const_iterator;
+```
+即两种迭代器都被实例化为const型（因为set不允许更改key），虽然在这里很洒脱，但在后面的设计上却造成了不小的问题。
+
+先实现一个新的类__TreeIterator,里面也都是基础的迭代器实现。
+```cpp
+template<class T,class Ptr,class Ref>
+struct __TreeIterator
+{
+	typedef RBTreeNode<T> Node;
+	typedef __TreeIterator<T, Ptr, Ref> Self;
+	Node* _node;
+
+	__TreeIterator(Node* node)
+		:_node(node)
+	{}
+	}
+	Ref operator*()
+	{
+		return _node->_data;
+	}
+
+	Ptr operator->()
+	{
+		return &_node->_data;
+	}
+
+	bool operator!=(const Self& s)
+	{
+		return _node != s._node;
+	}
+	Self& operator--()
+	{
+		if (_node->_left)
+		{
+			Node* subRight = _node->_left;
+			while (subRight->_right)
+			{
+				subRight = subRight->_right;
+			}
+
+			_node = subRight;
+		}
+		else
+		{
+			// 孩子是父亲的右的那个节点
+			Node* cur = _node;
+			Node* parent = cur->_parent;
+			while (parent && cur == parent->_left)
+			{
+				cur = cur->_parent;
+				parent = parent->_parent;
+			}
+
+			_node = parent;
+		}
+
+		return *this;
+	}
+
+	Self& operator++()
+	{
+		if (_node->_right)
+		{
+			// 右树的最左节点(最小节点)
+			Node* subLeft = _node->_right;
+			while (subLeft->_left)
+			{
+				subLeft = subLeft->_left;
+			}
+
+			_node = subLeft;
+		}
+		else
+		{
+			Node* cur = _node;
+			Node* parent = cur->_parent;
+			// 找孩子是父亲左的那个祖先节点，就是下一个要访问的节点
+			while (parent && cur == parent->_right)
+			{
+				cur = cur->_parent;
+				parent = parent->_parent;
+			}
+
+			_node = parent;
+		}
+
+		return *this;
+	}
+};
+```
+
+在红黑树文件里，先按部就班写一个基础的结构：
+里面有普通和const两种`不同类型`(这点很重要，本质上普通和const是两种完全不同的类型)的迭代器类型。
+```cpp
+//同一个类模版，但实例化出的不同类型，所以要提供两个版本的迭代器返回
+	typedef __TreeIterator<T,T*,T&> iterator;
+	typedef __TreeIterator<T,const T*,const T& > const_iterator;
+	// const_iterator
+
+	iterator begin()
+	{
+		Node* leftMin = _root;
+		while (leftMin && leftMin->_left)
+		{
+			leftMin = leftMin->_left;
+		}
+
+		return iterator(leftMin);
+	}
+
+	iterator end()
+	{
+		return iterator(nullptr);
+	}
+	const_iterator begin() const
+	{
+		Node* leftMin = _root;
+		while (leftMin && leftMin->_left)
+		{
+			leftMin = leftMin->_left;
+		}
+
+		return iterator(leftMin);
+	}
+
+	const_iterator end() const
+	{
+		return iterator(nullptr);
+	}
+
+```
+
+map里添加：
+```cpp
+       //map和set不一样，value是可以修改的。 
+		typedef typename RBTree<k, pair<k,v>, MapKeyOfT>::iterator iterator;
+		typedef typename RBTree<k, pair<const k, v>,MapKeyOfT>::const_iterator const_iterator;
+		//只给k添加const修饰就可以保证k不可被修改
+		
+			pair<iterator,bool> Insert(const pair<k, v>& kv) {
+				return _t.Insert(kv);
+		}
+			iterator begin() {  
+				return _t.begin();
+			}
+			iterator end() {
+				return _t.end();
+			}
+			const_iterator begin() const {
+				return _t.begin();
+			}
+			const_iterator end() const {
+				return _t.end();
+			}
+			v& operator[](const k& key)
+			{
+				pair<iterator, bool> ret = insert(make_pair(key, v()));
+				return ret.first->second;
+			}
+```
+
+set:
+```cpp
+        //可以只提供const版本 
+		typedef typename RBTree<k, k, SetKeyOfT>::const_iterator iterator;
+		typedef typename RBTree<k, k, SetKeyOfT>::const_iterator const_iterator;
+
+		pair<iterator,bool> Insert(const k& key) {  //会报错，因为这里的iterator是const版本，而insert是普通版本。
+		    	return _t.Insert(key);
+			
+		}
+		iterator begin() {
+			return _t.begin();
+		}
+		iterator end() {
+			return _t.end();
+		}
+		//set只提供const，不支持修改
+		const_iterator begin() const{
+			return _t.begin();
+		}
+		const_iterator end() const {
+			return _t.end();
+		}
+```
+
+这样写就会发生报错，因为Insert函数里return的是一个`普通迭代器类型`，而pair<iterator,bool>是一个`const类型`，二者的类型是不同的，所以会报错：
+
+>错误	C2440	“return”: 无法从“__TreeIterator<T,T *,T &>”转换为“__TreeIterator<T,const T *,const T &>”	
+
+解决方案：提供一个复制函数即可。
+```cpp
+__TreeIterator(const Iterator& it)
+		:_node(it._node)
+	{}
+```
+同时修改Insert函数：
+```cpp
+pair<iterator,bool> Insert(const k& key) {  //会报错，因为这里的iterator是const版本，而insert是普通版本。
+		    //	return _t.Insert(key);
+			pair<RBTree<k, k, SetKeyOfT>::iterator, bool> ret = _t.Insert(key);  //先用一个普通迭代器接受数据
+			return pair<iterator, bool>(ret.first, ret.second);  //将first从普通转变为const
+		}
+```
+
+
+
+# 完整代码
+
+## rbtree.h
+
+```cpp
+#pragma once
+#include<iostream>
+using namespace std;
+
+enum Colour
+{
+	RED,
+	BLACK
+};
+
+template<class T>
+struct RBTreeNode
+{
+	RBTreeNode<T>* _left;
+	RBTreeNode<T>* _right;
+	RBTreeNode<T>* _parent;
+
+	T _data;
+	Colour _col;
+
+	RBTreeNode(const T& data)
+		:_left(nullptr)
+		, _right(nullptr)
+		, _parent(nullptr)
+		, _data(data)
+		, _col(RED)
+	{}
+};
+
+template<class T,class Ptr,class Ref>
+struct __TreeIterator
+{
+	typedef RBTreeNode<T> Node;
+	typedef __TreeIterator<T, Ptr, Ref> Self;
+	typedef __TreeIterator<T,T*,T&> Iterator;
+	Node* _node;
+
+	__TreeIterator(Node* node)
+		:_node(node)
+	{}
+	__TreeIterator(const Iterator& it)
+		:_node(it._node)
+	{
+
+	}
+	Ref operator*()
+	{
+		return _node->_data;
+	}
+
+	Ptr operator->()
+	{
+		return &_node->_data;
+	}
+
+	bool operator!=(const Self& s)
+	{
+		return _node != s._node;
+	}
+	Self& operator--()
+	{
+		if (_node->_left)
+		{
+			Node* subRight = _node->_left;
+			while (subRight->_right)
+			{
+				subRight = subRight->_right;
+			}
+
+			_node = subRight;
+		}
+		else
+		{
+			// 孩子是父亲的右的那个节点
+			Node* cur = _node;
+			Node* parent = cur->_parent;
+			while (parent && cur == parent->_left)
+			{
+				cur = cur->_parent;
+				parent = parent->_parent;
+			}
+
+			_node = parent;
+		}
+
+		return *this;
+	}
+
+	Self& operator++()
+	{
+		if (_node->_right)
+		{
+			// 右树的最左节点(最小节点)
+			Node* subLeft = _node->_right;
+			while (subLeft->_left)
+			{
+				subLeft = subLeft->_left;
+			}
+
+			_node = subLeft;
+		}
+		else
+		{
+			Node* cur = _node;
+			Node* parent = cur->_parent;
+			// 找孩子是父亲左的那个祖先节点，就是下一个要访问的节点
+			while (parent && cur == parent->_right)
+			{
+				cur = cur->_parent;
+				parent = parent->_parent;
+			}
+
+			_node = parent;
+		}
+
+		return *this;
+	}
+};
+
+// set->RBTree<K, K, SetKeyOfT> _t;
+// map->RBTree<K, pair<K, V>, MapKeyOfT> _t;
+
+template<class K, class T, class KeyOfT>
+struct RBTree
+{
+	typedef RBTreeNode<T> Node;
+public:
+	//同一个类模版，但实例化出的不同类型，所以要提供两个版本的迭代器返回
+	typedef __TreeIterator<T,T*,T&> iterator;
+	typedef __TreeIterator<T,const T*,const T& > const_iterator;
+	// const_iterator
+
+	iterator begin()
+	{
+		Node* leftMin = _root;
+		while (leftMin && leftMin->_left)
+		{
+			leftMin = leftMin->_left;
+		}
+
+		return iterator(leftMin);
+	}
+
+	iterator end()
+	{
+		return iterator(nullptr);
+	}
+	const_iterator begin() const
+	{
+		Node* leftMin = _root;
+		while (leftMin && leftMin->_left)
+		{
+			leftMin = leftMin->_left;
+		}
+
+		return iterator(leftMin);
+	}
+
+	const_iterator end() const
+	{
+		return iterator(nullptr);
+	}
+
+
+	Node* Find(const K& key)
+	{
+		Node* cur = _root;
+		KeyOfT kot;
+		while (cur)
+		{
+			if (kot(cur->_data) < key)
+			{
+				cur = cur->_right;
+			}
+			else if (kot(cur->_data) > key)
+			{
+				cur = cur->_left;
+			}
+			else
+			{
+				return cur;
+			}
+		}
+
+		return nullptr;
+	}
+
+	pair<iterator,bool> Insert(const T& data) //t是k还是pair都行
+	{
+		if (_root == nullptr)
+		{
+			_root = new Node(data);
+			_root->_col = BLACK;
+			return make_pair(iterator(_root),true);
+		}
+
+		Node* parent = nullptr;
+		Node* cur = _root;
+
+		KeyOfT kot;
+		while (cur)
+		{
+			if (kot(cur->_data) < kot(data)) //这里是为了解决pair中key无法取出的问题，pair在库中的比较不是我们想要的方式，我们期望按first比。而库会比较first和second
+			{
+				parent = cur;
+				cur = cur->_right;
+			}
+			else if (kot(cur->_data) > kot(data))
+			{
+				parent = cur;
+				cur = cur->_left;
+			}
+			else
+			{
+				return make_pair(iterator(cur),false);
+			}
+		}
+
+		cur = new Node(data);
+		cur->_col = RED;
+		Node* newnode = cur;
+		if (kot(parent->_data) < kot(data))
+		{
+			parent->_right = cur;
+		}
+		else
+		{
+			parent->_left = cur;
+		}
+
+		cur->_parent = parent;
+
+		while (parent && parent->_col == RED)
+		{
+			Node* grandfather = parent->_parent;
+			if (parent == grandfather->_left)
+			{
+				Node* uncle = grandfather->_right;
+				// u存在且为红
+				if (uncle && uncle->_col == RED)
+				{
+					// 变色
+					parent->_col = uncle->_col = BLACK;
+					grandfather->_col = RED;
+
+					// 继续向上处理
+					cur = grandfather;
+					parent = cur->_parent;
+				}
+				else // u不存在 或 存在且为黑
+				{
+					if (cur == parent->_left)
+					{
+						
+						RotateR(grandfather);
+						parent->_col = BLACK;
+						grandfather->_col = RED;
+					}
+					else
+					{
+						
+						
+						RotateL(parent);
+						RotateR(grandfather);
+
+						cur->_col = BLACK;
+						grandfather->_col = RED;
+					}
+
+					break;
+				}
+			}
+			else // parent == grandfather->_right
+			{
+				Node* uncle = grandfather->_left;
+				// u存在且为红
+				if (uncle && uncle->_col == RED)
+				{
+					// 变色
+					parent->_col = uncle->_col = BLACK;
+					grandfather->_col = RED;
+
+					// 继续向上处理
+					cur = grandfather;
+					parent = cur->_parent;
+				}
+				else
+				{
+					if (cur == parent->_right)
+					{
+					
+						RotateL(grandfather);
+						grandfather->_col = RED;
+						parent->_col = BLACK;
+					}
+					else
+					{
+			
+						RotateR(parent);
+						RotateL(grandfather);
+						cur->_col = BLACK;
+						grandfather->_col = RED;
+					}
+
+					break;
+				}
+			}
+		}
+
+		_root->_col = BLACK;
+
+		return make_pair(iterator(newnode),true);
+	}
+
+	void RotateL(Node* parent)
+	{
+		++_rotateCount;
+
+		Node* cur = parent->_right;
+		Node* curleft = cur->_left;
+
+		parent->_right = curleft;
+		if (curleft)
+		{
+			curleft->_parent = parent;
+		}
+
+		cur->_left = parent;
+
+		Node* ppnode = parent->_parent;
+
+		parent->_parent = cur;
+
+
+		if (parent == _root)
+		{
+			_root = cur;
+			cur->_parent = nullptr;
+		}
+		else
+		{
+			if (ppnode->_left == parent)
+			{
+				ppnode->_left = cur;
+			}
+			else
+			{
+				ppnode->_right = cur;
+
+			}
+
+			cur->_parent = ppnode;
+		}
+	}
+
+
+	void RotateR(Node* parent)
+	{
+		++_rotateCount;
+
+		Node* cur = parent->_left;
+		Node* curright = cur->_right;
+
+		parent->_left = curright;
+		if (curright)
+			curright->_parent = parent;
+
+		Node* ppnode = parent->_parent;
+		cur->_right = parent;
+		parent->_parent = cur;
+
+		if (ppnode == nullptr)
+		{
+			_root = cur;
+			cur->_parent = nullptr;
+		}
+		else
+		{
+			if (ppnode->_left == parent)
+			{
+				ppnode->_left = cur;
+			}
+			else
+			{
+				ppnode->_right = cur;
+			}
+
+			cur->_parent = ppnode;
+		}
+	}
+
+	
+
+private:
+	Node* _root = nullptr;
+
+public:
+	int _rotateCount = 0;
+};
+
+```
+
+## set.h
+```cpp
+#pragma once
+#include "rbtree.h"
+
+namespace chengzi {
+	template<class k>
+	class set {
+		struct SetKeyOfT {
+			const k& operator()(const k& key) {
+				return key;
+			}
+		};
+	private:
+		RBTree<k, k, SetKeyOfT> _t;
+	public:
+		//可以只提供const版本 
+		typedef typename RBTree<k, k, SetKeyOfT>::const_iterator iterator;
+		typedef typename RBTree<k, k, SetKeyOfT>::const_iterator const_iterator;
+
+		pair<iterator,bool> Insert(const k& key) {  //会报错，因为这里的iterator是const版本，而insert是普通版本。
+		    //	return _t.Insert(key);
+			pair<RBTree<k, k, SetKeyOfT>::iterator, bool> ret = _t.Insert(key);  //先用一个普通迭代器接受数据
+			return pair<iterator, bool>(ret.first, ret.second);  //将first从普通转变为const
+		}
+		iterator begin() {
+			return _t.begin();
+		}
+		iterator end() {
+			return _t.end();
+		}
+		//set只提供const，不支持修改
+		const_iterator begin() const{
+			return _t.begin();
+		}
+		const_iterator end() const {
+			return _t.end();
+		}
+	};
+}
+```
+
+## map.h
+```cpp
+#pragma once
+#include "rbtree.h"
+
+namespace chengzi {
+	template<class k,class v>
+	class map {
+		struct MapKeyOfT {
+			const k& operator()(const pair<k, v>& kv) {
+				return kv.first;
+			}
+		};
+	private:     
+		RBTree<k, pair< k,v>,MapKeyOfT> _t; //如果只传value，那么无法使用const key_type去接受参数，比如find函数，他需要的是key，而map只有value是无法提取的。
+	public:
+		//map和set不一样，value是可以修改的，所以不能套用set的方法。 
+		typedef typename RBTree<k, pair<k,v>, MapKeyOfT>::iterator iterator;
+		typedef typename RBTree<k, pair<const k, v>, MapKeyOfT>::const_iterator const_iterator;
+		//只给k添加const修饰就可以保证k不可被修改
+		
+			pair<iterator,bool> Insert(const pair<k, v>& kv) {
+				return _t.Insert(kv);
+		}
+			iterator begin() {  
+				return _t.begin();
+			}
+			iterator end() {
+				return _t.end();
+			}
+			const_iterator begin() const {
+				return _t.begin();
+			}
+			const_iterator end() const {
+				return _t.end();
+			}
+			v& operator[](const k& key)
+			{
+				pair<iterator, bool> ret = insert(make_pair(key, v()));
+				return ret.first->second;
+			}
+		};
+	
+}
+```
