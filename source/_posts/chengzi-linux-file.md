@@ -296,12 +296,138 @@ int main()
 0,1,2分别是这个指针数组的下标，从上往下分别指向stdin，stdout，stderr所代表的三个已打开的文件。
 ```
 
->注意，上图的File*列表仅存储打开的文件，也就是说，如果此时新建一个文件，那么分配给他的下标就会是3，如果在创建此文件前关闭了1，那么此文件的文件描述符就会被分配为1。这就是Linux系统下文件描述符基本的分配规则。
+>注意，上图的File*列表仅存储打开的文件，也就是说，如果此时新建一个文件，那么分配给他的下标就会是3，如果在创建此文件前关闭了1，那么此文件的文件描述符就会被分配为1。这就是Linux系统下文件描述符基本的分配规则。并且File Struct这张表是唯一的，哪怕你在进程中打开了一个子进程，这张表也不会被拷贝，而是以共享的形式存在。
 
 ## 重定向
-1. 文件描述符的重定向
-文件描述符的重定向允许将一个文件描述符与另一个文件或设备相关联。这在重定向输入、输出和错误时非常有用。例如，可以使用>将命令的输出重定向到文件，或使用<将文件内容作为输入。
 
+当我们关闭掉1:
+
+```c
+int main()
+{
+ close(1);
+ int fd = open("file", O_WRONLY|O_CREAT, 00644);
+ 
+ printf("fd: %d\n", fd);
+ 
+ close(fd);
+ exit(0);
+}
+
+```
+按照我们才说的，那么屏幕就不会打印我们想要输出的内容，而是将其输入到file文件中。
+事实确实如此，因为printf底层封装的仍然是输出到下标1，哪怕stdout被关闭，系统也不清楚，换句话说，系统只认识1，他要做的就是将需要打印的内容输出到1代表的这个文件。这也是我认为的linux环境下文件管理的一个显著特征，层层封装，再由系统统一调用，有点多态的意思在里面。
+
+>将原本该打印到屏幕的内容打印到file里，这就叫重定向。
+
+文件描述符的重定向允许将一个文件描述符与另一个文件或设备相关联。例如，可以使用>将命令的输出重定向到文件，或使用<将文件内容作为输入。
+```c
+//输出重定向：将命令的标准输出保存到文件。
+//将 "Hello, World!" 写入到文件 output.txt
+echo "Hello, World!" > output.txt
+//输入重定向：从文件中读取数据作为命令的标准输入。
+//从文件 input.txt 中读取数据并将其作为命令的输入
+cat < input.txt
+//追加：将命令的标准输出追加到文件末尾。
+//追加 "Hello again!" 到文件 output.txt
+echo "Hello again!" >> output.txt
+//错误输出重定向：将命令的标准错误输出保存到文件。
+//将命令的标准错误输出保存到 error.log 文件
+ls non_existent_directory 2> error.log  
+//标准输出和标准错误重定向到同一文件：
+//将标准输出和标准错误输出都重定向到同一个文件
+ls non_existent_directory > output_and_error.log 2>&1
+//使用管道：将一个命令的输出传递给另一个命令的输入。
+//列出当前目录下的文件，并将结果通过管道传递给 grep 命令以筛选文件名中包含 "example" 的文件
+ls | grep "example"
+```
+
+但在本质上，其更改的是文件描述符所指向的内容。在上面我画了一张关于File Struct的图，当执行了close(1)操作，再执行新建file文件，那么此时文件描述符为1的坑位就指向了file而不是stdout。
+可以这么说，重定向的魅力在于`操作文件描述符`，将它们连接到不同的位置，从而`改变了命令的输入和输出源`，使得命令行操作更加灵活多变。
+举一个例子：
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <fcntl.h>
+
+int main() {
+    // 打开或创建文件 "output.txt"，并获取文件描述符
+    int file_fd = open("output.txt", O_WRONLY|O_CREAT|O_TRUNC, 0666);
+    
+    if (file_fd == -1) {
+        perror("open");
+        exit(1);
+    }
+    
+    // 备份标准输出文件描述符
+    int stdout_backup = dup(1);
+    
+    if (stdout_backup == -1) {
+        perror("dup");
+        exit(1);
+    }
+    
+    // 使用 dup2 将文件描述符 "file_fd" 复制到标准输出文件描述符 "1"
+    if (dup2(file_fd, 1) == -1) {
+        perror("dup2");
+        exit(1);
+    }
+    
+    // 现在标准输出已经被重定向到 "output.txt"
+    printf("This will be written to output.txt\n");
+    
+    // 恢复标准输出
+    if (dup2(stdout_backup, 1) == -1) {
+        perror("dup2");
+        exit(1);
+    }
+    
+    // 关闭文件描述符
+    close(file_fd);
+    close(stdout_backup);
+    
+    // 现在标准输出已经恢复，继续输出到屏幕
+    printf("This will be shown on the screen\n");
+    
+    return 0;
+}
+
+```
+小tip:因为IO相关函数与系统调用接口对应，并且库函数封装系统调用，所以本质上，访问文件都是通过`fd`访问的。所以C库当中的FILE结构体内部，`必定封装了fd`。
+
+## 缓冲区
+
+```c
+
+int main()
+{
+ const char *p1="fwrite\n";
+ const char *p2="write\n";
+ printf("printf");
+ fwrite(p1, strlen(p1), 1, stdout);
+ write(1, p2, strlen(p2));
+ fork();
+ return 0;
+}
+```
+执行三个输出，将信息打印到屏幕上，再执行fork新建一个子进程，这就是目前代码所执行的逻辑。
+但当你将此文件重定向到一个普通文件中时，输出会变成这样：
+```c
+write
+printf
+fwrite
+printf
+fwrite
+```
+看起来write仍然只执行一次，而printf和fwrite被执行了两次。
+
+首先，需要明白一个概念:printf和fwrite库函数有自带的缓冲区，而write作为系统调用则没有缓冲区。
+这些缓冲区都是用户级缓冲区。
+printf和fwrite都是库函数，这个缓冲区由C的标准库来提供。而write是系统调用，库函数则是在系统调用的“上层”， 是对系统调用的“封装”，所以write没有这个缓冲区也不足为奇。
+一般C库函数写入文件时是`全缓冲`(进程结束统一刷新)的，而写入显示器是`行缓冲`(遇到\n刷新)。当发生重定向到普通文件时，数据的缓冲方式由行缓冲变成了全缓冲。那么缓冲区中的数据就不会被立即刷新，甚至fork之后也不会刷新。当`进程退出`之后，就会被统一刷新，再写入文件当中。
+当进行fork时，父子数据会发生写时拷贝，缓冲区也是不被共享的，但数据会被拷贝，那么就有了两个缓冲区，分别在等待进程结束时进行刷新，将数据刷新至内核级别的缓冲区。
+目前来说可以这么理解，当数据被刷新到了内核级别的缓冲区，就可以认为数据到了硬件层面。
 
 #  linux如何管理文件
 
